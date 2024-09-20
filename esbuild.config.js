@@ -9,6 +9,8 @@ esbuild.build({
   outfile: 'dist/main.js',
   platform: 'node',
   sourcemap: true, // opcional
+  minify: true, // comprimir el código
+  target: 'node14', // especifica la versión de Node.js que estás usando
   plugins: [
     alias({
       '@': path.resolve(__dirname, 'src')
