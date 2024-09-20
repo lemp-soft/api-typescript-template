@@ -25,17 +25,20 @@ COPY . .
 # Copiar el directorio prisma antes de ejecutar prisma generate
 COPY prisma ./prisma
 
-# Ejecutar prisma generate
-RUN pnpm prisma generate || { echo "Error al ejecutar prisma generate"; exit 1; }
-
 # Crear el archivo .env con las variables de entorno
-RUN echo "DATABASE_URL=${DATABASE_URL}" >> .env && \
+RUN echo "DATABASE_URL=${DATABASE_URL}" > .env && \
     echo "JWT_SECRET=${JWT_SECRET}" >> .env && \
     echo "PORT=${PORT}" >> .env && \
     echo "BCRYPT_SALT_ROUNDS=${BCRYPT_SALT_ROUNDS}" >> .env
 
+# Ejecutar prisma generate
+RUN pnpm prisma generate || { echo "Error al ejecutar prisma generate"; exit 1; }
+
 # Ejecutar las migraciones
 RUN pnpm prisma migrate deploy || { echo "Error al ejecutar migraciones"; exit 1; }
+
+# Construir el proyecto TypeScript
+RUN pnpm build || { echo "Error al ejecutar el build"; exit 1; }
 
 # Etapa 2: Ejecución
 FROM node:20
