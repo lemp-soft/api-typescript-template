@@ -7,12 +7,6 @@ RUN npm install -g pnpm
 # Directorio de trabajo
 WORKDIR /app
 
-# Especificar las variables que necesitas
-ARG DATABASE_URL
-ARG JWT_SECRET
-ARG PORT
-ARG BCRYPT_SALT_ROUNDS
-
 # Copiar package.json y pnpm-lock.yaml antes para aprovechar la caché de Docker
 COPY package.json pnpm-lock.yaml ./
 
@@ -33,9 +27,6 @@ RUN echo "DATABASE_URL=${DATABASE_URL}" >> .env && \
     echo "JWT_SECRET=${JWT_SECRET}" >> .env && \
     echo "PORT=${PORT}" >> .env && \
     echo "BCRYPT_SALT_ROUNDS=${BCRYPT_SALT_ROUNDS}" >> .env
-
-# Ejecutar las migraciones
-RUN pnpm prisma migrate deploy || { echo "Error al ejecutar migraciones"; exit 1; }
 
 # Etapa 2: Ejecución
 FROM node:20
@@ -67,5 +58,5 @@ COPY --from=build /app/.env ./
 # Exponer el puerto
 EXPOSE ${PORT}
 
-# Ejecutar la aplicación
-CMD ["node", "dist/index.js"]
+# Ejecutar las migraciones y la aplicación
+CMD ["sh", "-c", "pnpm prisma migrate deploy && node dist/index.js"]
