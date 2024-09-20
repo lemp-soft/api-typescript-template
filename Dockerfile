@@ -72,4 +72,4 @@ COPY --from=build /app/.env ./
 EXPOSE ${PORT}
 
 # Ejecutar la aplicación
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/main.js"]
