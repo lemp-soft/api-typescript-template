@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Request, Response } from 'express'
 import { UserRepositoryInterface } from '@/modules/Users/domain/repo/User.repository'
 import { AuthService } from '../../aplication/services/Auth.services'
@@ -53,6 +54,24 @@ export class AuthHandler {
         }
         const accessToken = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '15m' })
         return res.status(200).json({ accessToken })
+      }) as unknown as Response
+    } catch (error) {
+      return res.status(400).json({ error })
+    }
+  }
+
+  async GetUserByToken (req: Request, res: Response): Promise<Response> {
+    try {
+      const token = req.headers.authorization
+      if (token == null) {
+        return res.status(401).json({ error: 'Invalid token' })
+      }
+      return jwt.verify(token, JWT_SECRET, async (err: jwt.VerifyErrors | null, user: any) => {
+        if (err != null) {
+          return res.status(403).json({ error: 'Invalid token' })
+        }
+        const userResponse = await this.userRepository.findById(user.id)
+        return res.status(200).json(userResponse)
       }) as unknown as Response
     } catch (error) {
       return res.status(400).json({ error })

@@ -8,4 +8,5 @@ const handler = new AuthHandler()
 router.post('/register', handler.Register.bind(handler))
 router.post('/login', handler.Login.bind(handler))
 router.post('/refresh', handler.RefreshToken.bind(handler))
+router.get('/me', handler.GetUserByToken.bind(handler))
 export default router
