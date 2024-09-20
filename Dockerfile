@@ -61,6 +61,7 @@ RUN pnpm install --prod
 # Copiar el build de la etapa anterior
 COPY --from=build /app/dist ./dist
 
+
 # Copiar el archivo .env de la etapa de construcción
 COPY --from=build /app/.env ./
 
