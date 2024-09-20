@@ -30,6 +30,9 @@ COPY prisma ./prisma
 # Ejecutar prisma generate
 RUN pnpm prisma generate || { echo "Error al ejecutar prisma generate"; exit 1; }
 
+# Ejecutar las migraciones
+RUN pnpm prisma migrate deploy || { echo "Error al ejecutar migraciones"; exit 1; }
+
 # Construir el proyecto TypeScript
 RUN pnpm build
 
