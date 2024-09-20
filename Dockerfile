@@ -60,9 +60,6 @@ COPY --from=build /app/dist ./dist
 # Copiar los archivos de Prisma
 COPY prisma ./prisma
 
-# Copiar el archivo .env.template y renombrarlo a .env
-COPY .env.template .env
-
 # Usar las variables de entorno en el archivo .env
 RUN echo "DATABASE_URL=${DATABASE_URL}" >> .env && \
     echo "JWT_SECRET=${JWT_SECRET}" >> .env && \
@@ -74,4 +71,3 @@ EXPOSE 3000
 
 # Ejecutar la aplicación
 CMD ["node", "dist/index.js"]
-###################
