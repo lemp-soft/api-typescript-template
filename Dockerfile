@@ -70,4 +70,4 @@ RUN echo "DATABASE_URL=${DATABASE_URL}" >> .env && \
 EXPOSE 3000
 
 # Ejecutar la aplicación
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/main.js"]
